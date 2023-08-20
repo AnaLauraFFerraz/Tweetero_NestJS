@@ -15,6 +15,10 @@ export class AppService {
     this.tweets = [];
   }
 
+  getHello(): string {
+    return "I'm okay!";
+  }
+
   createUser(body: CreateUserDto) {
     const { username, avatar } = body;
     return this.users.push(new User(username, avatar));

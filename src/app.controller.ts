@@ -9,6 +9,11 @@ import { TweetWithAvatar } from './entities/tweet.entity';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get("/")
+  getHello(): string {
+    return this.appService.getHello();
+  }
+
   @Post("sign-up")
   @HttpCode(200)
   createUser(@Body() body: CreateUserDto) {
