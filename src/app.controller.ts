@@ -1,8 +1,9 @@
-import { Controller, Get, Post, HttpCode, HttpException, Body, Param, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, HttpCode, HttpException, Body, HttpStatus, Query, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { CreateTweetDto } from './dtos/create-tweet.dto';
 import { User } from './entities/user.entity';
+import { TweetWithAvatar } from './entities/tweet.entity';
 
 @Controller()
 export class AppController {
@@ -15,8 +16,8 @@ export class AppController {
       return this.appService.createUser(body);  
     } catch (error) {
       throw new HttpException(
-        "Não foi possível criar um usuário. Tente novamente!", 
-        HttpStatus.INTERNAL_SERVER_ERROR)
+        "Could not create user. Try again", 
+        HttpStatus.CONFLICT)
     }
   }
 
@@ -25,7 +26,7 @@ export class AppController {
     try {
       return this.appService.getUsers();
     } catch (error) {
-      throw new Error()
+      throw new Error(error)
     }
   }
 
@@ -35,6 +36,18 @@ export class AppController {
       return this.appService.createTweet(body);
     } catch (error) {
       throw new HttpException("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @Get("tweets")
+  getTweets(@Query("page") page: string): TweetWithAvatar[] {
+    const pageNum = parseInt(page);
+    if (pageNum < 1 || isNaN(pageNum)) throw new HttpException("Invalid page", HttpStatus.BAD_REQUEST);
+
+    try {
+      return this.appService.getTweets(pageNum);
+    } catch (error) {
+      throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
     }
   }
 }

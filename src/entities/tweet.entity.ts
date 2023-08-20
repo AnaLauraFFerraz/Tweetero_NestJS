@@ -17,3 +17,9 @@ export class Tweet {
     return this._tweet;
   }
 }
+
+export class TweetWithAvatar {
+  username: string;
+  avatar: string;
+  tweet: string;
+}

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { Tweet } from './entities/tweet.entity';
+import { TweetWithAvatar } from './entities/tweet.entity';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { CreateTweetDto } from './dtos/create-tweet.dto';
 
@@ -30,5 +31,25 @@ export class AppService {
     if(!isUser) throw new Error("UNAUTHORIZED")
 
     return this.tweets.push(new Tweet(isUser, tweet));
+  }
+
+  getTweets(page?: number): TweetWithAvatar[] {
+    const LIMIT = 15;
+    let lastTweets = this.tweets.slice(-15);
+
+    if (page) {
+      const start = (page - 1) * LIMIT;
+      lastTweets = this.tweets.slice(start, start + LIMIT);
+    }
+
+    let tweetsList = [];
+
+    lastTweets.map((tweet) => {
+      const tweetUser = this.users.find(user => user.username === tweet.username);
+      const avatar = tweetUser ? tweetUser.avatar : null;
+      tweetsList.push({ username: tweet.username, avatar, tweet: tweet.tweet });
+    });
+
+    return tweetsList.reverse();
   }
 }
