@@ -13,5 +13,9 @@ export class AppService {
   createUser(body: CreateUserDto) {
     const { username, avatar } = body;
     return this.users.push(new User(username, avatar));
-  }  
+  }
+
+  getUsers(): User[] {
+    return this.users;
+  }
 }
