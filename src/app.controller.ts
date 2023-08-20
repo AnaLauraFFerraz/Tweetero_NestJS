@@ -50,4 +50,13 @@ export class AppController {
       throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
     }
   }
+
+  @Get("tweets/:username")
+  getTweetsByUser(@Param("username") username: string): TweetWithAvatar[] {
+    try {
+      return this.appService.getTweetsByUser(username);
+    } catch (error) {
+      throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST)
+    }
+  }
 }
