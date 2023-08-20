@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { User } from './entities/user.entity';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  private users: User[];
+
+  constructor() {
+    this.users = [];
   }
+
+  createUser(body: CreateUserDto) {
+    const { username, avatar } = body;
+    return this.users.push(new User(username, avatar));
+  }  
 }
