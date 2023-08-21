@@ -46,15 +46,21 @@ export class AppController {
 
   @Get("tweets")
   getTweets(@Query("page") page: string): TweetWithAvatar[] {
-    const pageNum = parseInt(page);
-    if (pageNum < 1 || isNaN(pageNum)) throw new HttpException("Invalid page", HttpStatus.BAD_REQUEST);
+    if (page) {
+      const pageNum = parseInt(page);
+      if (pageNum < 1 || isNaN(pageNum)) {
+        throw new HttpException("Invalid page", HttpStatus.BAD_REQUEST);
+      }
+      return this.appService.getTweets(pageNum);
+    }
 
     try {
-      return this.appService.getTweets(pageNum);
+      return this.appService.getTweets();
     } catch (error) {
       throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
     }
   }
+
 
   @Get("tweets/:username")
   getTweetsByUser(@Param("username") username: string): TweetWithAvatar[] {

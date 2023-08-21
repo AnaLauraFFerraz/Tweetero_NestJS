@@ -37,22 +37,23 @@ export class AppService {
     return this.tweets.push(new Tweet(isUser, tweet));
   }
 
-  getTweets(page?: number): TweetWithAvatar[] {
-    let lastTweets = this.tweets.slice(-15);
+  getTweets(page: number = 1): TweetWithAvatar[] {
     const itemsPerPage = 15;
-
-    if (page) {
-      const start = (page - 1) * itemsPerPage;
-      lastTweets = this.tweets.slice(start, start + itemsPerPage);
-    }
-
-    const paginatedTweets = lastTweets.map((tweet) => {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+  
+    const paginatedTweets = this.tweets.slice(start, end).map((tweet) => {
       const tweetUser = this.users.find(user => user.username === tweet.username);
-      const avatar = tweetUser ? tweetUser.avatar : null;
-      return { username: tweet.username, avatar, tweet: tweet.tweet };
+      return {
+        username: tweet.username,
+        avatar: tweetUser ? tweetUser.avatar : null,
+        tweet: tweet.tweet
+      };
     });
-    return paginatedTweets.reverse()
+  
+    return paginatedTweets.reverse();
   }
+  
 
   getTweetsByUser(username: string): TweetWithAvatar[] {
     const UserTweets = this.tweets
